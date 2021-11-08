@@ -1,56 +1,14 @@
 const fs = require("fs");
-const stream = require("stream");
 const caesarShift = require("./ciphers/caesar_cipher");
 const atbashShift = require("./ciphers/atbash_cipher");
-const validateAndParseArgs = require("./utils");
+const { validateAndParseArgs, throwErrorAndExit } = require("./utils");
+const {
+  transformStream1,
+  transformStream8,
+  transformStreamAtbash,
+} = require("./transform");
 
-var Transform = stream.Transform;
-
-class transformStream1 extends Transform {
-  constructor(foo, action) {
-    super();
-    this.transformFoo = foo;
-    this.action = action;
-  }
-  _transform(chunk, enc, done) {
-    const encodedChunk = this.transformFoo(
-      chunk.toString("utf8"),
-      this.action ? 1 : -1
-    );
-    this.push(encodedChunk);
-    done();
-  }
-}
-
-class transformStream8 extends Transform {
-  constructor(foo, action) {
-    super();
-    this.transformFoo = foo;
-    this.action = action;
-  }
-  _transform(chunk, enc, done) {
-    const encodedChunk = this.transformFoo(
-      chunk.toString("utf8"),
-      this.action ? 8 : -8
-    );
-    this.push(encodedChunk);
-    done();
-  }
-}
-
-class transformStreamAtbash extends Transform {
-  constructor(foo) {
-    super();
-    this.transformFoo = foo;
-  }
-  _transform(chunk, enc, done) {
-    const encodedChunk = this.transformFoo(chunk.toString("utf8"));
-    this.push(encodedChunk);
-    done();
-  }
-}
-
-function main() {
+(function main() {
   const parsedArgs = validateAndParseArgs(process.argv);
   const input = parsedArgs.input;
   const output = parsedArgs.output;
@@ -99,10 +57,8 @@ function main() {
         );
         break;
       default:
-        console.log("Human-friendly error");
+        throwErrorAndExit("Human-friendly error");
     }
   }
   readableStream.pipe(writableStream);
-}
-
-main();
+})();
