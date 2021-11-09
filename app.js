@@ -18,14 +18,12 @@ const {
 
   if (input !== undefined) {
     readableStream = fs.createReadStream(input, { encoding: "utf8" });
-    if (output !== undefined) {
-      writableStream = fs.createWriteStream(output);
-    }
+  } else {
+    readableStream = process.stdin,{ encoding: "utf8" };
   }
-  if (input === undefined) {
-    readableStream = process.stdin;
-  }
-  if (output === undefined) {
+  if (output !== undefined) {
+    writableStream = fs.createWriteStream(output);
+  } else {
     writableStream = process.stdout;
   }
 
