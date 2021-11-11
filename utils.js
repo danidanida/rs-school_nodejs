@@ -7,16 +7,16 @@ function validateAndParseArgs(argsArr) {
   let outputIndex = arrayWithValidatedSpelling.indexOf("-o");
   let inputIndex = arrayWithValidatedSpelling.indexOf("-i");
 
-  // parsing
-  let input =
-    arrayWithValidatedSpelling[inputIndex >= 0 ? inputIndex + 1 : null];
+  let nextAfterInputArgument = inputIndex >= 0 ? inputIndex + 1 : null;
+  let nextAfterOutputArgument = outputIndex >= 0 ? outputIndex + 1 : null;
+  let nextAfterConfigArgument = configIndex + 1;
 
-  let output =
-    arrayWithValidatedSpelling[outputIndex >= 0 ? outputIndex + 1 : null];
+  let input = arrayWithValidatedSpelling[nextAfterInputArgument];
 
-  let ciphers = arrayWithValidatedSpelling[configIndex + 1].split("-");
+  let output = arrayWithValidatedSpelling[nextAfterOutputArgument];
 
-  // validation
+  let ciphers = arrayWithValidatedSpelling[nextAfterConfigArgument].split("-");
+
   if (inputIndex !== -1 && !fs.existsSync(input)) {
     throwErrorAndExit("Human-friendly error! Wrong input. ");
   }
@@ -24,7 +24,7 @@ function validateAndParseArgs(argsArr) {
     throwErrorAndExit("Human-friendly error! Wrong output. ");
   }
 
-  if ((configIndex = -1)) {
+  if (configIndex === -1) {
     throwErrorAndExit("Human-friendly error! Doesn't have configs argument. ");
   }
 

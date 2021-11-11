@@ -19,13 +19,14 @@ const {
   if (input !== undefined) {
     readableStream = fs.createReadStream(input, { encoding: "utf8" });
   } else {
-    readableStream = process.stdin,{ encoding: "utf8" };
+    (readableStream = process.stdin), { encoding: "utf8" };
   }
   if (output !== undefined) {
     writableStream = fs.createWriteStream(output);
   } else {
     writableStream = process.stdout;
   }
+  readableStream.on("error", (error) => throwErrorAndExit(error));
 
   for (let i = 0; i < parsedArgs.ciphers.length; i++) {
     switch (parsedArgs.ciphers[i]) {
